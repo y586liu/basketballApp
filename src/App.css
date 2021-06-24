@@ -1,0 +1,30 @@
+html,
+body,
+#root,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+.sidebar {
+  float: left;
+  background-color: rgb(236, 183, 162);
+  height: 100%; /* Specify a height */
+  width: 300px; /* 0 width - change this with JavaScript */
+  top: 0;
+  left: 0;
+  overflow-x: hidden; /* Disable horizontal scroll */
+}
+
+.sidebar li {
+  padding: 8px 8px 8px 10px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar h2{
+    padding-left: 10px;
+}
