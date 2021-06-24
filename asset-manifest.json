@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/basketballApp/static/css/main.2eeba3ee.chunk.css",
+    "main.js": "/basketballApp/static/js/main.479683da.chunk.js",
+    "main.js.map": "/basketballApp/static/js/main.479683da.chunk.js.map",
+    "runtime-main.js": "/basketballApp/static/js/runtime-main.1d4d39dc.js",
+    "runtime-main.js.map": "/basketballApp/static/js/runtime-main.1d4d39dc.js.map",
+    "static/js/2.1bdc233d.chunk.js": "/basketballApp/static/js/2.1bdc233d.chunk.js",
+    "static/js/2.1bdc233d.chunk.js.map": "/basketballApp/static/js/2.1bdc233d.chunk.js.map",
+    "index.html": "/basketballApp/index.html",
+    "static/css/main.2eeba3ee.chunk.css.map": "/basketballApp/static/css/main.2eeba3ee.chunk.css.map",
+    "static/js/2.1bdc233d.chunk.js.LICENSE.txt": "/basketballApp/static/js/2.1bdc233d.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1d4d39dc.js",
+    "static/js/2.1bdc233d.chunk.js",
+    "static/css/main.2eeba3ee.chunk.css",
+    "static/js/main.479683da.chunk.js"
+  ]
+}
