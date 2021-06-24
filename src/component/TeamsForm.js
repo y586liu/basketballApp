@@ -53,6 +53,7 @@ function TeamsForm({ league }) {
         });
         const res = await response.json();
         temprows = [...temprows, createData(res.response)];
+        //set rows when reach the end of myteam
         if (i === myteams.length - 1) {
           setRows(temprows);
         }

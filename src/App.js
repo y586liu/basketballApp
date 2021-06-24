@@ -11,6 +11,7 @@ function App() {
 
   const [selectedLeague, setSelectedLeague] = useState({});
 
+  //get all the leagues of a country
   function onCountryChange(event, value) {
     let leagueUrl =
       "https://api-basketball.p.rapidapi.com/leagues?country=" +
@@ -47,6 +48,7 @@ function App() {
     }
   }
 
+  //fetch data of all countries
   useEffect(() => {
     (async () => {
       const response = await fetch(
@@ -65,6 +67,7 @@ function App() {
     })();
   }, []);
 
+  //fetch data of all leagues
   useEffect(() => {
     (async () => {
       const response = await fetch(
