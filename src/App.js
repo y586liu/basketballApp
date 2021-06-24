@@ -36,7 +36,6 @@ function App() {
   }
 
   function renderTable() {
-    console.log("rendertable");
     if (selectedLeague && Object.keys(selectedLeague).length !== 0) {
       if (selectedLeague.seasons.length === 0) {
         return <h2>There are 0 seasons of this league</h2>;
