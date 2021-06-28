@@ -13,23 +13,7 @@ function App() {
 
   //get all the leagues of a country
   function onCountryChange(event, value) {
-    let leagueUrl =
-      "https://api-basketball.p.rapidapi.com/leagues?country=" +
-      value.name.toLowerCase();
-    fetch(leagueUrl, {
-      method: "GET",
-      headers: {
-        "x-rapidapi-key": "159c41a39fmsh809ec9a39138a2bp12d233jsne6898ee04471",
-        "x-rapidapi-host": "api-basketball.p.rapidapi.com",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setLeagues(data.response);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    setLeagues(allleagues.filter((l) => l.country.id === value.id));
   }
 
   function onLeagueChange(event, value) {
@@ -44,47 +28,42 @@ function App() {
         return <TeamsForm league={selectedLeague} />;
       }
     } else {
-      return <h2>Select a league in the left panel to start.</h2>
+      return <h2>Select a league in the left panel to start.</h2>;
     }
   }
 
   //fetch data of all countries
   useEffect(() => {
-    (async () => {
-      const response = await fetch(
-        "https://api-basketball.p.rapidapi.com/countries",
-        {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key":
-              "159c41a39fmsh809ec9a39138a2bp12d233jsne6898ee04471",
-            "x-rapidapi-host": "api-basketball.p.rapidapi.com",
-          },
-        }
-      );
-      const res = await response.json();
-      setCountries(res.response);
-    })();
+    let url = "https://api-basketball.p.rapidapi.com/countries";
+    fetchData(url, "country");
   }, []);
 
   //fetch data of all leagues
   useEffect(() => {
-    (async () => {
-      const response = await fetch(
-        "https://api-basketball.p.rapidapi.com/leagues",
-        {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key":
-              "159c41a39fmsh809ec9a39138a2bp12d233jsne6898ee04471",
-            "x-rapidapi-host": "api-basketball.p.rapidapi.com",
-          },
-        }
-      );
-      const res = await response.json();
-      setAlleagues(res.response);
-    })();
+    let url = "https://api-basketball.p.rapidapi.com/leagues";
+    fetchData(url, "allleagues");
   }, []);
+
+  function fetchData(url, type) {
+    (async () => {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "x-rapidapi-key":
+            "159c41a39fmsh809ec9a39138a2bp12d233jsne6898ee04471",
+          "x-rapidapi-host": "api-basketball.p.rapidapi.com",
+        },
+      });
+      const res = await response.json();
+      if (type === "country") {
+        setCountries(res.response);
+      } else if (type === "allleagues") {
+        setAlleagues(res.response);
+      } else if (type === "leagues") {
+        setLeagues(res.response);
+      }
+    })();
+  }
 
   return (
     <div id="app">

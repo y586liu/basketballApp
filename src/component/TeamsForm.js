@@ -14,6 +14,7 @@ function TeamsForm({ league }) {
 
   let temprows = [];
   let teams = [];
+  let promises = [];
 
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState([]);
@@ -23,7 +24,7 @@ function TeamsForm({ league }) {
     setPage(newPage);
   };
 
-  function createData(team) {
+  function createTeamStats(team) {
     let name = team.team.name;
     let wins = team.games.wins.all.total;
     let draws = team.games.draws.all.total;
@@ -34,40 +35,44 @@ function TeamsForm({ league }) {
   //loop through all team ids:
   //search team stats with {league} {season} {teamid}, save {teamname, wins, losses, draws} as a row
   function getTeamStats(myteams) {
-    for (let i = 0; i < myteams.length; i++) {
-      (async () => {
-        let teamUrl =
-          "https://api-basketball.p.rapidapi.com/statistics?season=" +
-          season.season +
-          "&league=" +
-          league.id +
-          "&team=" +
-          myteams[i];
-        const response = await fetch(teamUrl, {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key":
-              "159c41a39fmsh809ec9a39138a2bp12d233jsne6898ee04471",
-            "x-rapidapi-host": "api-basketball.p.rapidapi.com",
-          },
-        });
-        const res = await response.json();
-        temprows = [...temprows, createData(res.response)];
-        //set rows when reach the end of myteam
+    myteams.map((id) => {
+      let teamUrl =
+        "https://api-basketball.p.rapidapi.com/statistics?season=" +
+        season.season +
+        "&league=" +
+        league.id +
+        "&team=" +
+        id;
+      const p = fetch(teamUrl, {
+        method: "GET",
+        headers: {
+          "x-rapidapi-key":
+            "159c41a39fmsh809ec9a39138a2bp12d233jsne6898ee04471",
+          "x-rapidapi-host": "api-basketball.p.rapidapi.com",
+        },
+      }).then((response) => response.json());
+      promises = [...promises, p];
+      console.log(promises);
+    });
+    return Promise.all(promises).then((values) => {
+      values.map((e, i) => {
+        temprows = [...temprows, createTeamStats(e.response)];
         if (i === myteams.length - 1) {
           setRows(temprows);
         }
-      })();
-    }
+      });
+    });
   }
 
   function OnSeasonChange(index) {
     setSeason(league.seasons[index]);
+    setPage(0);
   }
 
   //whenever league changes, reset the season
   useEffect(() => {
     setSeason(league.seasons[0]);
+    setPage(0);
   }, [league]);
 
   //search teams with {league} and {season}, get ids and save in array 'teams'
@@ -92,57 +97,22 @@ function TeamsForm({ league }) {
     })();
   }, [league, season]);
 
-  function RenderSeasonButtons() {
-    switch (league.seasons.length) {
-      case 1:
-        return (
-          <div>
-            <button onClick={() => OnSeasonChange(0)}>
-              {" "}
-              {league.seasons[0].season}{" "}
-            </button>
-          </div>
-        );
-      case 2:
-        return (
-          <div>
-            <button onClick={() => OnSeasonChange(0)}>
-              {" "}
-              {league.seasons[0].season}{" "}
-            </button>
-            <button onClick={() => OnSeasonChange(1)}>
-              {" "}
-              {league.seasons[1].season}{" "}
-            </button>
-          </div>
-        );
-      default:
-        return (
-          <div>
-            <button onClick={() => OnSeasonChange(0)}>
-              {" "}
-              {league.seasons[0].season}{" "}
-            </button>
-            <button onClick={() => OnSeasonChange(1)}>
-              {" "}
-              {league.seasons[1].season}{" "}
-            </button>
-            <button onClick={() => OnSeasonChange(2)}>
-              {" "}
-              {league.seasons[2].season}{" "}
-            </button>
-          </div>
-        );
-    }
-  }
-
   return (
     <div className="main">
       <h2>last three seasons: </h2>
-      {RenderSeasonButtons()}
+      {league.seasons.slice(0, 3).map((object, i) => {
+        return (
+          <button onClick={() => OnSeasonChange(i)}>
+            {" "}
+            {league.seasons[i].season}{" "}
+          </button>
+        );
+      })}
       <h2>Country: {league.country.name}</h2>
       <h2>League: {league.name}</h2>
-      <h2>Season: {season.season} (from {season.start} to {season.end})</h2>
+      <h2>
+        Season: {season.season} (from {season.start} to {season.end})
+      </h2>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -157,7 +127,7 @@ function TeamsForm({ league }) {
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
-                <TableRow key={row.name}>
+                <TableRow>
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="right">{row.wins}</TableCell>
                   <TableCell align="right">{row.loses}</TableCell>
